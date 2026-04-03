@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iPainter Wall Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #111;
+      border: 2px solid #f5d000;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 0 20px rgba(245, 208, 0, 0.15);
+    }
+
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .logo-wrap img {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      color: #f5d000;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #ccc;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+      color: #f5d000;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #f5d000;
+      box-shadow: 0 0 0 2px rgba(245, 208, 0, 0.2);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: #f5d000;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .result-card {
+      margin-top: 22px;
+      background: #000;
+      border: 1px solid #f5d000;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .result-title {
+      color: #ccc;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .result {
+      font-size: 34px;
+      font-weight: bold;
+      color: #f5d000;
+    }
+
+    .summary {
+      margin-top: 20px;
+      background: #181818;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .summary h3 {
+      margin-top: 0;
+      color: #f5d000;
+      font-size: 18px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #2a2a2a;
+      font-size: 14px;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      color: #bbb;
+    }
+
+    .summary-value {
+      color: #fff;
+      font-weight: bold;
+      text-align: right;
+    }
+
+    .note {
+      margin-top: 16px;
+      color: #999;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 14px;
+      }
+
+      .container {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .result {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-wrap">
+      <img src="logo.png" alt="iPainter Logo" />
+    </div>
+
+    <h1>Wall Calculator</h1>
+    <div class="subtitle">iPainter Product Quantity Calculator</div>
+
+    <label for="height">Wall Height (ft)</label>
+    <input type="number" id="height" step="0.01" placeholder="Enter wall height" />
+
+    <label for="length">Wall Length (ft)</label>
+    <input type="number" id="length" step="0.01" placeholder="Enter wall length" />
+
+    <label for="product">Select Product</label>
+    <select id="product">
+      <option value="fluted">Fluted Panel</option>
+      <option value="marble">Marble Board</option>
+      <option value="ps">PS Wall Panel</option>
+      <option value="ceiling">Ceiling</option>
+      <option value="pu">PU Stone</option>
+      <option value="acousticS">Acoustic Panel Small</option>
+      <option value="acousticB">Acoustic Panel Big</option>
+      <option value="softS">Soft Stone Small</option>
+      <option value="softB">Soft Stone Big</option>
+      <option value="miniWall">Mini Wall Board</option>
+      <option value="wallBoard">Wall Board</option>
+    </select>
+
+    <label for="waste">Wastage (%)</label>
+    <input type="number" id="waste" value="10" step="1" />
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result-card">
+      <div class="result-title">Recommended Quantity</div>
+      <div class="result" id="result">0 pcs</div>
+    </div>
+
+    <div class="summary">
+      <h3>Calculation Summary</h3>
+      <div class="summary-item">
+        <div class="summary-label">Wall Area</div>
+        <div class="summary-value" id="wallArea">-</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">1 Product Size</div>
+        <div class="summary-value" id="productSize">-</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">1 Product Covers</div>
+        <div class="summary-value" id="panelArea">-</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Exact Pieces</div>
+        <div class="summary-value" id="exactPieces">-</div>
+      </div>
+    </div>
+
+    <div class="note">
+      Save your logo image as <b>logo.png</b> and put it in the same folder as this HTML file.
+    </div>
+  </div>
+
+  <script>
+    const products = {
+      fluted: { name: "Fluted Panel", w: 0.5, h: 9.5 },
+      marble: { name: "Marble Board", w: 4, h: 9.5 },
+      ps: { name: "PS Wall Panel", w: 1, h: 9.5 },
+      ceiling: { name: "Ceiling", w: 1, h: 21 },
+      pu: { name: "PU Stone", w: 2, h: 4 },
+      acousticS: { name: "Acoustic Panel Small", w: 2, h: 2 },
+      acousticB: { name: "Acoustic Panel Big", w: 2, h: 2 },
+      softS: { name: "Soft Stone Small", w: 2, h: 4 },
+      softB: { name: "Soft Stone Big", w: 4, h: 8 },
+      miniWall: { name: "Mini Wall Board", w: 2, h: 9.5 },
+      wallBoard: { name: "Wall Board", w: 4, h: 9.5 }
+    };
+
+    function calculate() {
+      const height = parseFloat(document.getElementById("height").value);
+      const length = parseFloat(document.getElementById("length").value);
+      const waste = parseFloat(document.getElementById("waste").value) || 0;
+      const selectedKey = document.getElementById("product").value;
+      const p = products[selectedKey];
+
+      if (!height || !length || height <= 0 || length <= 0) {
+        alert("Please enter valid wall height and wall length.");
+        return;
+      }
+
+      const wallArea = height * length;
+      const panelArea = p.w * p.h;
+      const exactPieces = wallArea / panelArea;
+      const recommended = Math.ceil(exactPieces * (1 + waste / 100));
+
+      document.getElementById("result").innerText = recommended + " pcs";
+      document.getElementById("wallArea").innerText = wallArea.toFixed(2) + " sq ft";
+      document.getElementById("productSize").innerText = p.w + " ft × " + p.h + " ft";
+      document.getElementById("panelArea").innerText = panelArea.toFixed(2) + " sq ft";
+      document.getElementById("exactPieces").innerText = exactPieces.toFixed(2);
+    }
+  </script>
+</body>
+</html>
