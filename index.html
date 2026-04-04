@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iPainter Wall Calculator</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     * {
       box-sizing: border-box;
@@ -18,7 +19,7 @@
     }
 
     .container {
-      max-width: 500px;
+      max-width: 520px;
       margin: 0 auto;
       background: #111;
       border: 2px solid #f5d000;
@@ -188,16 +189,22 @@
       <img src="logo.png" alt="iPainter Logo" />
     </div>
 
-    <h1>Wall Calculator</h1>
-    <div class="subtitle">iPainter Product Quantity Calculator</div>
+    <h1 id="appTitle">Wall Calculator</h1>
+    <div class="subtitle" id="appSubtitle">iPainter Product Quantity Calculator</div>
 
-    <label for="height">Wall Height (ft)</label>
+    <label for="language" id="languageLabel">Language</label>
+    <select id="language" onchange="changeLanguage()">
+      <option value="en">English</option>
+      <option value="ms">Bahasa Melayu</option>
+    </select>
+
+    <label for="height" id="heightLabel">Wall Height (ft)</label>
     <input type="number" id="height" step="0.01" placeholder="Enter wall height" />
 
-    <label for="length">Wall Length (ft)</label>
+    <label for="length" id="lengthLabel">Wall Length (ft)</label>
     <input type="number" id="length" step="0.01" placeholder="Enter wall length" />
 
-    <label for="product">Select Product</label>
+    <label for="product" id="productLabel">Select Product</label>
     <select id="product">
       <option value="fluted">Fluted Panel</option>
       <option value="marble">Marble Board</option>
@@ -212,37 +219,37 @@
       <option value="wallBoard">Wall Board</option>
     </select>
 
-    <label for="waste">Wastage (%)</label>
+    <label for="waste" id="wasteLabel">Wastage (%)</label>
     <input type="number" id="waste" value="10" step="1" />
 
-    <button onclick="calculate()">Calculate</button>
+    <button onclick="calculate()" id="calculateBtn">Calculate</button>
 
     <div class="result-card">
-      <div class="result-title">Recommended Quantity</div>
+      <div class="result-title" id="resultTitle">Recommended Quantity</div>
       <div class="result" id="result">0 pcs</div>
     </div>
 
     <div class="summary">
-      <h3>Calculation Summary</h3>
+      <h3 id="summaryTitle">Calculation Summary</h3>
       <div class="summary-item">
-        <div class="summary-label">Wall Area</div>
+        <div class="summary-label" id="wallAreaLabel">Wall Area</div>
         <div class="summary-value" id="wallArea">-</div>
       </div>
       <div class="summary-item">
-        <div class="summary-label">1 Product Size</div>
+        <div class="summary-label" id="productSizeLabel">1 Product Size</div>
         <div class="summary-value" id="productSize">-</div>
       </div>
       <div class="summary-item">
-        <div class="summary-label">1 Product Covers</div>
+        <div class="summary-label" id="panelAreaLabel">1 Product Covers</div>
         <div class="summary-value" id="panelArea">-</div>
       </div>
       <div class="summary-item">
-        <div class="summary-label">Exact Pieces</div>
+        <div class="summary-label" id="exactPiecesLabel">Exact Pieces</div>
         <div class="summary-value" id="exactPieces">-</div>
       </div>
     </div>
 
-    <div class="note">
+    <div class="note" id="noteText">
       Save your logo image as <b>logo.png</b> and put it in the same folder as this HTML file.
     </div>
   </div>
@@ -262,7 +269,76 @@
       wallBoard: { name: "Wall Board", w: 4, h: 9.5 }
     };
 
+    const translations = {
+      en: {
+        appTitle: "Wall Calculator",
+        appSubtitle: "iPainter Product Quantity Calculator",
+        languageLabel: "Language",
+        heightLabel: "Wall Height (ft)",
+        heightPlaceholder: "Enter wall height",
+        lengthLabel: "Wall Length (ft)",
+        lengthPlaceholder: "Enter wall length",
+        productLabel: "Select Product",
+        wasteLabel: "Wastage (%)",
+        calculateBtn: "Calculate",
+        resultTitle: "Recommended Quantity",
+        summaryTitle: "Calculation Summary",
+        wallAreaLabel: "Wall Area",
+        productSizeLabel: "1 Product Size",
+        panelAreaLabel: "1 Product Covers",
+        exactPiecesLabel: "Exact Pieces",
+        noteText: 'Save your logo image as <b>logo.png</b> and put it in the same folder as this HTML file.',
+        invalidMessage: "Please enter valid wall height and wall length."
+      },
+      ms: {
+        appTitle: "Kalkulator Dinding",
+        appSubtitle: "Kalkulator Kuantiti Produk iPainter",
+        languageLabel: "Bahasa",
+        heightLabel: "Tinggi Dinding (ft)",
+        heightPlaceholder: "Masukkan tinggi dinding",
+        lengthLabel: "Panjang Dinding (ft)",
+        lengthPlaceholder: "Masukkan panjang dinding",
+        productLabel: "Pilih Produk",
+        wasteLabel: "Wastage (%)",
+        calculateBtn: "Kira",
+        resultTitle: "Kuantiti Disyorkan",
+        summaryTitle: "Ringkasan Pengiraan",
+        wallAreaLabel: "Keluasan Dinding",
+        productSizeLabel: "Saiz 1 Produk",
+        panelAreaLabel: "Liputan 1 Produk",
+        exactPiecesLabel: "Bilangan Tepat",
+        noteText: 'Simpan logo anda sebagai <b>logo.png</b> dan letakkan dalam folder yang sama dengan fail HTML ini.',
+        invalidMessage: "Sila masukkan tinggi dan panjang dinding yang sah."
+      }
+    };
+
+    function changeLanguage() {
+      const lang = document.getElementById("language").value;
+      const t = translations[lang];
+
+      document.getElementById("appTitle").innerText = t.appTitle;
+      document.getElementById("appSubtitle").innerText = t.appSubtitle;
+      document.getElementById("languageLabel").innerText = t.languageLabel;
+      document.getElementById("heightLabel").innerText = t.heightLabel;
+      document.getElementById("height").placeholder = t.heightPlaceholder;
+      document.getElementById("lengthLabel").innerText = t.lengthLabel;
+      document.getElementById("length").placeholder = t.lengthPlaceholder;
+      document.getElementById("productLabel").innerText = t.productLabel;
+      document.getElementById("wasteLabel").innerText = t.wasteLabel;
+      document.getElementById("calculateBtn").innerText = t.calculateBtn;
+      document.getElementById("resultTitle").innerText = t.resultTitle;
+      document.getElementById("summaryTitle").innerText = t.summaryTitle;
+      document.getElementById("wallAreaLabel").innerText = t.wallAreaLabel;
+      document.getElementById("productSizeLabel").innerText = t.productSizeLabel;
+      document.getElementById("panelAreaLabel").innerText = t.panelAreaLabel;
+      document.getElementById("exactPiecesLabel").innerText = t.exactPiecesLabel;
+      document.getElementById("noteText").innerHTML = t.noteText;
+    }
+
     function calculate() {
+      const lang = document.getElementById("language").value;
+      const t = translations[lang];
+
       const height = parseFloat(document.getElementById("height").value);
       const length = parseFloat(document.getElementById("length").value);
       const waste = parseFloat(document.getElementById("waste").value) || 0;
@@ -270,7 +346,7 @@
       const p = products[selectedKey];
 
       if (!height || !length || height <= 0 || length <= 0) {
-        alert("Please enter valid wall height and wall length.");
+        alert(t.invalidMessage);
         return;
       }
 
@@ -284,6 +360,12 @@
       document.getElementById("productSize").innerText = p.w + " ft × " + p.h + " ft";
       document.getElementById("panelArea").innerText = panelArea.toFixed(2) + " sq ft";
       document.getElementById("exactPieces").innerText = exactPieces.toFixed(2);
+    }
+
+    changeLanguage();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
     }
   </script>
 </body>
